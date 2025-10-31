@@ -1,16 +1,23 @@
 import sys
 import pygame
+from settings import Settings
+from ship import Ship
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
 
     def __init__(self):
         """Initialize the game, and create game resources."""
+
+        # Initializing the background settings that Pygame
+        # needs to work properly.
         pygame.init()
 
         # For controlling frame rate.
         # Instance of class Clock.
         self.clock = pygame.time.Clock()
+
+        self.settings = Settings()
 
         # This is our display window.
         # The object assigned to self.screen is type surface.
@@ -19,11 +26,19 @@ class AlienInvasion:
         # game, like an alien or a ship, is its own surface.
         # The surface returned by dsiplay.set_mode() represents
         # the entire game window.
-        self.screen = pygame.display.set_mode((1200, 800))
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
 
         # Setting the backgroud color.
-        self.bg_color = (230, 255, 230)
+        self.bg_color = (230, 230, 230)
+
+        # Making a ship instance.
+        # The call to Ship() requires one argument: an instance
+        # of AlienInvasion. The self argument here refers to the
+        # current instance of AlienInvasion. This is the parameter
+        # that gives Ship access to the game's resources, such as
+        # the screen object.
+        self.ship = Ship(self)
 
     # A function that controls the game.
     def run_game(self):
@@ -42,7 +57,12 @@ class AlienInvasion:
 
             # Redraw the screen during each pass through the
             # loop.
-            self.screen.fill(self.bg_color)
+            self.screen.fill(self.settings.bg_color)
+
+            # After filling the background, we draw the ship
+            # on the screen by calling ship.blitme(), so the 
+            # ship appears on top of the background.
+            self.ship.blitme()
 
             # Make the most recently drawn screen visible.
             # This creates the illusion of smooth movement.
