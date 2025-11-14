@@ -44,34 +44,45 @@ class AlienInvasion:
     def run_game(self):
         """Start the main loop for the game."""
         while True:
-            # Watch for keyboard and mouse events.
-            # To access the events that Pygame detects, we'll
-            # use the pygame.event.get() function. This function
-            # returns a list of events that have taken place
-            # since the last time this functioin was called.
-            for event in pygame.event.get(): # The event loop.
-                # Inside, we write a series of statements to
-                # detect and respond to specific events.
-                if event.type == pygame.QUIT:
-                    sys.exit()
-
-            # Redraw the screen during each pass through the
-            # loop.
-            self.screen.fill(self.settings.bg_color)
-
-            # After filling the background, we draw the ship
-            # on the screen by calling ship.blitme(), so the 
-            # ship appears on top of the background.
-            self.ship.blitme()
-
-            # Make the most recently drawn screen visible.
-            # This creates the illusion of smooth movement.
-            pygame.display.flip()
+            self._check_events()
+            self._update_screen()
 
             # Frame rate set to 60.
             # Pygame will try to ensure the main loop runs
             # exactly 60 times per second.
             self.clock.tick(60)
+
+    def _check_events(self):
+        """Respond to keypresses and mouse events."""
+        # Watch for keyboard and mouse events.
+        # To access the events that Pygame detects, we'll
+        # use the pygame.event.get() function. This function
+        # returns a list of events that have taken place
+        # since the last time this functioin was called.
+        for event in pygame.event.get(): # The event loop.
+            # Inside, we write a series of statements to
+            # detect and respond to specific events.
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_d:
+                    # Move the ship to the right.
+                    self.ship.rect.x += 1
+
+    def _update_screen(self):
+        """Update images on the screen, and flip to the new screen."""
+        # Redraw the screen during each pass through the
+        # loop.
+        self.screen.fill(self.settings.bg_color)
+
+        # After filling the background, we draw the ship
+        # on the screen by calling ship.blitme(), so the 
+        # ship appears on top of the background.
+        self.ship.blitme()
+
+        # Make the most recently drawn screen visible.
+        # This creates the illusion of smooth movement.
+        pygame.display.flip()
 
 if __name__ == '__main__':
     # Make a game instance, and run the game.

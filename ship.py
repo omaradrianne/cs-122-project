@@ -38,3 +38,16 @@ class Ship:
 # Pygame lets us treat all game elements like rectangles (rects),
 # even if they're not exactly shaped like rectangles.
 # We will be treating the ship and the screen as rectangles.
+
+# We can set any of these values to establish the current postion 
+# of the rect. Options:
+# center, centerx, centery, top, bottom, left, right, midbottom,
+# midtop, midleft, midright.
+# We could also specify the x and y attributes, which are the x-
+# and y-coordinates of its top-left corner.
+
+# In Pygame, the origin (0,0) is at the top-left corner of the
+# screen, and coordinates increase as you go down and to the right.
+# On a 1200x800 screen, the origin is at the top-left corner, and
+# the bottom-right corner has the coordinates (1200, 800). These
+# coordinates refer to the game window, not the physical screen.
