@@ -27,6 +27,14 @@ class AlienInvasion:
         # The surface returned by dsiplay.set_mode() represents
         # the entire game window.
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+
+        # This first line tells Pygame to figure out a window size
+        # that will fill the screen.
+        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        # # We use the width and height attributes of the screen's rect to 
+        # # update the settings object.
+        # self.settings.screen_width = self.screen.get_rect().width
+        # self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
 
         # Setting the backgroud color.
@@ -82,6 +90,8 @@ class AlienInvasion:
             self.ship.moving_up = True
         elif event.key == pygame.K_s:
             self.ship.moving_down = True
+        elif event.key == pygame.K_ESCAPE:
+            sys.exit()
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""

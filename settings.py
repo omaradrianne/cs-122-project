@@ -9,8 +9,8 @@ class Settings:
         # (255, 0, 0) is red
         # (0, 255, 0) is green
         # (0, 0, 255) is blue
-        self.screen_width = 1200
-        self.screen_height = 800
+        self.screen_width = 900
+        self.screen_height = 600
         self.bg_color = (230, 230, 230)
 
         # Ship settings
