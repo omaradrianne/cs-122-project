@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -48,12 +49,17 @@ class AlienInvasion:
         # the screen object.
         self.ship = Ship(self)
 
+        # When calling update() on a group, the group automatically
+        # calls update() for each sprite in the group.
+        self.bullets = pygame.sprite.Group()
+
     # A function that controls the game.
     def run_game(self):
         """Start the main loop for the game."""
         while True:
             self._check_events()
             self.ship.update()
+            self.bullets.update()
             self._update_screen()
 
             # Frame rate set to 60.
@@ -92,6 +98,8 @@ class AlienInvasion:
             self.ship.moving_down = True
         elif event.key == pygame.K_ESCAPE:
             sys.exit()
+        elif event.key == pygame.K_RETURN:
+            self._fire_bullet()
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
@@ -104,11 +112,21 @@ class AlienInvasion:
         elif event.key == pygame.K_s:
             self.ship.moving_down = False
 
+    def _fire_bullet(self):
+        """Create a new bullet and add it to the bullets group."""
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         # Redraw the screen during each pass through the
         # loop.
         self.screen.fill(self.settings.bg_color)
+
+        # Invokes the draw_bullet() function per bullet object within
+        # the bullets group.
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
 
         # After filling the background, we draw the ship
         # on the screen by calling ship.blitme(), so the 
