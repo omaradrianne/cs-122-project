@@ -1,3 +1,4 @@
+import shelve
 import sys
 from time import sleep
 
@@ -267,6 +268,9 @@ class AlienInvasion:
         else:
             self.game_active = False
             pygame.mouse.set_visible(True)
+            with shelve.open('hiscores.dbm') as file:
+                if file['hiscore'] < self.stats.high_score:
+                    file['hiscore'] = self.stats.high_score
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
