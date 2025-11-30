@@ -80,3 +80,7 @@ class Ship:
 # On a 1200x800 screen, the origin is at the top-left corner, and
 # the bottom-right corner has the coordinates (1200, 800). These
 # coordinates refer to the game window, not the physical screen.
+
+    def center_ship(self):
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
