@@ -132,6 +132,9 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        # Checks and removes collisions between bullets and alien sprites
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
     # Creates and adds a single alien instance to the fleet
     def _create_alien(self, x_position, y_position):
         new_alien = Alien(self)
