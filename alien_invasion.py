@@ -132,8 +132,11 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
-        # Check for any bullets that have hit aliens.
-        # If so, get rid of the bullet and the alien.
+        self._check_bullet_alie_collisions()
+
+    def _check_bullet_alie_collisions(self):
+        """Respond to bullet-alien collisions."""
+        # Remove any bullets and aliens that have collided.
         # This compares the positions of all the bullets in self.bullets
         # and all the aliens in self.aliens, and identifies any that overlap.
         # Whenever the rects of bullet and alien overlap, groupcollide() adds
