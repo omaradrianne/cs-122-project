@@ -5,6 +5,8 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -43,8 +45,9 @@ class AlienInvasion:
         # self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
 
-        # Create an instance to store game states
+        # Create an instance to store game states, and scoreboard
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         # Setting the backgroud color.
         self.bg_color = (230, 230, 230)
@@ -63,7 +66,9 @@ class AlienInvasion:
 
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.game_active = True
+        self.game_active = False
+
+        self.play_button = Button(self, "Play")
 
     # A function that controls the game.
     def run_game(self):
@@ -95,12 +100,39 @@ class AlienInvasion:
             # detect and respond to specific events.
             if event.type == pygame.QUIT:
                 sys.exit()
+            # Event: left click is pressed.
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
             # Event: a movement key is pressed.
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             # Event: a movement key is released.
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+
+    def _check_play_button(self, mouse_pos):
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+
+        if button_clicked and not self.game_active:
+            # Reset game stats
+            self.settings.initialize_dynamic_settings()
+            self.stats.reset_stats()
+            self.sb.prep_score()
+            self.sb.prep_level()
+            self.sb.prep_ships()
+            self.game_active = True
+
+            # Empty screen of existing assets
+            self.bullets.empty()
+            self.aliens.empty()
+
+            # Initialize start game state
+            self._create_fleet()
+            self.ship.center_ship()
+
+            # Hide cursor
+            pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
@@ -149,9 +181,22 @@ class AlienInvasion:
         # Checks and removes collisions between bullets and alien sprites
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
+        if collisions:
+            for alien in collisions.values():
+                self.stats.score += self.settings.alien_points * len(alien)
+
+            self.sb.prep_score()
+            self.sb.check_high_score()
+
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
+
+            self.stats.level += 1
+            self.sb.prep_level()
+
+            self.ship.center_ship()
 
     # Creates and adds a single alien instance to the fleet
     def _create_alien(self, x_position, y_position):
@@ -210,6 +255,7 @@ class AlienInvasion:
         """Respond to the ship being hit by an alien"""
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
 
             self.bullets.empty()
             self.aliens.empty()
@@ -220,6 +266,7 @@ class AlienInvasion:
             sleep(0.5)
         else:
             self.game_active = False
+            pygame.mouse.set_visible(True)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
@@ -237,6 +284,13 @@ class AlienInvasion:
         # ship appears on top of the background.
         self.ship.blitme()
         self.aliens.draw(self.screen)
+
+        # Draw scoreboard
+        self.sb.show_score()
+
+        # If the game is not active, draw play button
+        if not self.game_active:
+            self.play_button.draw_button()
 
         # Make the most recently drawn screen visible.
         # This creates the illusion of smooth movement.

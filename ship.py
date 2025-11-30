@@ -1,6 +1,7 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship:
+class Ship(Sprite):
     """A class to manage the ship."""
 
     # ai_game is a reference to the current instance of the
@@ -9,6 +10,7 @@ class Ship:
     def __init__(self, ai_game):
         """Initialize the ship and set its starting position."""
 
+        super().__init__()
         # This allows us to easily access the game screen in all
         # methods of this class.
         self.screen = ai_game.screen
@@ -83,4 +85,5 @@ class Ship:
 
     def center_ship(self):
         self.rect.midbottom = self.screen_rect.midbottom
+        self.y = float(self.rect.y)
         self.x = float(self.rect.x)
