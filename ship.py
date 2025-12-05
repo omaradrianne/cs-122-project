@@ -27,7 +27,7 @@ class Ship(Sprite):
         # Load the ship image and get its rect.
         # This function returns a surface object representing the
         # ship, which we assign to self.image.
-        self.image = pygame.image.load('images/ship.bmp')
+        self.image = pygame.image.load('images/tinyShip_14.png').convert_alpha()
         
         # When the image is loaded, we call get_rect() to access
         # the ship surface's rect attribute so we can later use it

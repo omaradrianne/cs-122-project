@@ -10,7 +10,7 @@ class Alien(Sprite):
         self.settings = ai_game.settings
 
         # Loads the alien image from the images folder
-        self.image = pygame.image.load('images/alien.bmp')
+        self.image = pygame.image.load('images/tinyShip_7.png').convert_alpha()
         self.rect = self.image.get_rect()
 
         # Places the alien at the top left of the screen
